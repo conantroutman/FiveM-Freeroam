@@ -1,20 +1,34 @@
 ﻿using CitizenFX.Core;
-using Client.World;
+using CitizenFX.Core.Native;
+using System;
 using System.Threading.Tasks;
+using MenuAPI;
+using Client.Menus.InteractionMenu;
 
 namespace Client
 {
     public class MainClient : BaseScript
     {
+        private static InteractionMenu InteractionMenu { get; set; }
         public MainClient()
         {
-            WeaponPickups.CreatePickups();
-            //Tick += OnTick;
+            InteractionMenu = new InteractionMenu();
+            InteractionMenu.CreateMenu();
+            API.StatSetInt((uint)API.GetHashKey("MP0_STAMINA"), 100, true);
+            API.RegisterCommand("passive", new Action(Gameplay.PassiveMode.Enable), false);
+            Client.Players.Colors.Setup();
+            World.WeaponPickups.CreatePickups();
+            HUD.Blips.Create();
+            HUD.GamerTags.Create();
+            Tick += OnTick;
         }
 
         public async Task OnTick()
         {
-
+            //Player.Loop();
+            HUD.Blips.Update();
+            HUD.GamerTags.Update();
         }
+
     }
 }

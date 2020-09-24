@@ -1,5 +1,9 @@
 description 'Freeroam'
 
+files {
+	'MenuAPI.dll'
+}
+
 client_script 'Client.net.dll'
 
 fx_version 'adamant'
