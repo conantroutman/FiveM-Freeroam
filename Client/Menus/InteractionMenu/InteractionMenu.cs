@@ -1,5 +1,6 @@
 ﻿using CitizenFX.Core;
 using MenuAPI;
+using System.Media;
 
 namespace Client.Menus.InteractionMenu
 {
@@ -31,6 +32,11 @@ namespace Client.Menus.InteractionMenu
                 {
                     QuickGPSItem.SetQuickGPS(listIndex);
                 }
+            };
+
+            Menu.OnMenuOpen += (sender) =>
+            {
+                //Audio.PlaySoundFrontend();
             };
 
             Inventory = new Inventory();

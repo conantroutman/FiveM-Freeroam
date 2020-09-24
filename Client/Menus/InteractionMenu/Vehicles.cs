@@ -10,30 +10,17 @@ namespace Client.Menus.InteractionMenu
     {
         private Menu menu;
         private Menu requestVehicleMenu;
-        private readonly List<Menu> vehicleClassMenuList = new List<Menu>()
+
+        private List<string> doorsList = new List<string>()
         {
-            new Menu("Sports"),
-            new Menu("Muscle"),
-            new Menu("Super"),
-            new Menu("Sports Classics"),
-            new Menu("Sedans"),
-            new Menu("SUVs"),
-            new Menu("Compacts"),
-            new Menu("Coupes"),
-            new Menu("Motorcycles"),
-            new Menu("Off-Road"),
-            new Menu("Open Wheel"),
-            new Menu("Cycles"),
-            new Menu("Vans"),
-            new Menu("Utility"),
-            new Menu("Industrial"),
-            new Menu("Service"),
-            new Menu("Commercial"),
-            new Menu("Emergency"),
-            new Menu("Military")
+            "None",
+            "All",
+            "Left Door",
+            "Right Door",
+            "Hood",
+            "Trunk"
         };
-        private MenuItem vehicleItem;
-        private List<MenuItem> vehicleItemList = new List<MenuItem>();
+        private MenuListItem doorsItem;
 
         private static Vehicle currentVehicle;
 
@@ -51,17 +38,29 @@ namespace Client.Menus.InteractionMenu
 
             CreateRequestVehicleMenu();
 
-            CreateClassMenus("Compacts", Data.VehicleData.Compacts);
-            CreateClassMenus("Muscle", Data.VehicleData.Muscle);
+            doorsItem = new MenuListItem("Doors", doorsList, 0);
+            menu.AddMenuItem(doorsItem);
+
+            menu.OnListItemSelect += (sender, listItem, listIndex, realIndex) =>
+            {
+                if(listItem == doorsItem)
+                {
+                    DoorControls(listIndex);
+                }
+            };
+
         }
 
         private void CreateRequestVehicleMenu()
         {
             requestVehicleMenu = new Menu(Game.Player.Name, "Request Vehicle");
             MenuController.AddSubmenu(menu, requestVehicleMenu);
-            MenuItem requestVehicleButton = new MenuItem("Request Vehicle", "Fuck");
+            MenuItem requestVehicleButton = new MenuItem("Request Vehicle", "Get the mechanic to deliver a vehicle of your choice.");
             menu.AddMenuItem(requestVehicleButton);
             MenuController.BindMenuItem(menu, requestVehicleMenu, requestVehicleButton);
+
+            CreateClassMenus("Compacts", Data.VehicleData.Compacts);
+            CreateClassMenus("Muscle", Data.VehicleData.Muscle);
         }
 
         //--------------------------------------------------------------------
@@ -75,6 +74,37 @@ namespace Client.Menus.InteractionMenu
             MenuItem classMenuButton = new MenuItem(title, "Fuck");
             requestVehicleMenu.AddMenuItem(classMenuButton);
             MenuController.BindMenuItem(requestVehicleMenu, classMenu.GetMenu(), classMenuButton);
+        }
+
+        private void DoorControls(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    foreach (VehicleDoor door in currentVehicle.Doors.GetAll())
+                    {
+                        door.Close();
+                    }
+                    break;
+                case 1:
+                    foreach (VehicleDoor door in currentVehicle.Doors.GetAll())
+                    {
+                        door.Open();
+                    }
+                    break;
+                case 2:
+                    currentVehicle.Doors.GetAll()[0].Open();
+                    break;
+                case 3:
+                    currentVehicle.Doors.GetAll()[1].Open();
+                    break;
+                case 4:
+                    currentVehicle.Doors.GetAll()[2].Open();
+                    break;
+                case 5:
+                    currentVehicle.Doors.GetAll()[3].Open();
+                    break;
+            }
         }
 
         public async static void SummonVehicle(string modelName)
