@@ -28,6 +28,7 @@ namespace Client
             //Player.Loop();
             HUD.Blips.Update();
             HUD.GamerTags.Update();
+            Menus.InteractionMenu.Vehicles.Loop();
         }
 
     }

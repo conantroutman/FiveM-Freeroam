@@ -26,6 +26,8 @@ namespace Client.Menus.InteractionMenu
 
         private static Vehicle currentVehicle;
 
+        private static bool toggleBlip = true;
+
         public Menu GetMenu()
         {
             if (menu == null)
@@ -100,8 +102,12 @@ namespace Client.Menus.InteractionMenu
             menu.AddMenuItem(requestVehicleButton);
             MenuController.BindMenuItem(menu, requestVehicleMenu, requestVehicleButton);
 
-            CreateClassMenus("Compacts", Data.VehicleData.Compacts);
+            CreateClassMenus("Open Wheel", Data.VehicleData.OpenWheel);
+            CreateClassMenus("Super", Data.VehicleData.Super);
+            CreateClassMenus("Sports", Data.VehicleData.Sports);
+            CreateClassMenus("Sports Classics", Data.VehicleData.SportsClassics);
             CreateClassMenus("Muscle", Data.VehicleData.Muscle);
+            CreateClassMenus("Compacts", Data.VehicleData.Compacts);
         }
 
         //--------------------------------------------------------------------
@@ -183,6 +189,29 @@ namespace Client.Menus.InteractionMenu
             currentVehicle.Delete();
         }
 
+        public async static void Loop()
+        {
+            // The following if statement handles hiding and unhiding of the vehicle blip as the player enters and exits the vehicle.
+
+            // Enter vehicle
+            if(Game.Player.Character.IsInVehicle() && Game.Player.Character.CurrentVehicle == currentVehicle) {
+                if (toggleBlip)
+                {
+                    toggleBlip = !toggleBlip;
+                    currentVehicle.AttachedBlip.Delete();
+                }
+            }
+            // Exit vehicle
+            else if(!Game.Player.Character.IsInVehicle() && Game.Player.LastVehicle == currentVehicle)
+            {
+                if (!toggleBlip)
+                {
+                    toggleBlip = !toggleBlip;
+                    currentVehicle.AttachBlip().Sprite = BlipSprite.PersonalVehicleCar;
+                    currentVehicle.AttachedBlip.Name = "Personal Vehicle";
+                }
+            }
+        }
     }
 
     class VehicleClassMenu
@@ -198,6 +227,7 @@ namespace Client.Menus.InteractionMenu
             foreach (string vehicleModel in vehiclesList)
             {
                 vehicleItem = new MenuItem(API.GetLabelText(vehicleModel));
+                // If the vehicle doesn't exist, don't add it to the menu
                 if(vehicleItem.Text != "NULL")
                 {
                     vehicleItem.ItemData = vehicleModel;
