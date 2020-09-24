@@ -22,6 +22,8 @@ namespace Client.Menus.InteractionMenu
         };
         private MenuListItem doorsItem;
 
+        private Menu remoteControlsMenu;
+
         private static Vehicle currentVehicle;
 
         public Menu GetMenu()
@@ -43,12 +45,51 @@ namespace Client.Menus.InteractionMenu
 
             menu.OnListItemSelect += (sender, listItem, listIndex, realIndex) =>
             {
-                if(listItem == doorsItem)
+                if (listItem == doorsItem)
                 {
                     DoorControls(listIndex);
                 }
             };
 
+            remoteControlsMenu = new Menu(Game.Player.Name, "Vehicle Remote Functions");
+            MenuController.AddSubmenu(menu, remoteControlsMenu);
+            MenuItem remoteControlsMenuButton = new MenuItem("Vehicle Remote Functions", "Select to adjust vehicle engine, lights and radio options" );
+            menu.AddMenuItem(remoteControlsMenuButton);
+            MenuController.BindMenuItem(menu, remoteControlsMenu, remoteControlsMenuButton);
+
+            MenuListItem toggleEngineItem = new MenuListItem("Engine", new List<string>() { "Off", "On" }, 0, "Sets your vehicle's engine on or off.");
+            MenuListItem toggleHeadlightsItem = new MenuListItem("Headlights", new List<string>() { "Off", "On" }, 0, "Sets your vehicle's headlights on or off.");
+            MenuListItem toggleNeonItem = new MenuListItem("Neon", new List<string>() { "Off", "On" }, 0, "Sets your vehicle's neon lights on or off.");
+            MenuListItem toggleRadioItem = new MenuListItem("Radio", new List<string>() { "Off", "On" }, 0, "Sets your vehicle's radio on or off.");
+
+            remoteControlsMenu.AddMenuItem(toggleEngineItem);
+            remoteControlsMenu.AddMenuItem(toggleHeadlightsItem);
+            remoteControlsMenu.AddMenuItem(toggleNeonItem);
+            remoteControlsMenu.AddMenuItem(toggleRadioItem);
+
+            remoteControlsMenu.OnListItemSelect += (sender, listItem, listIndex, realIndex) =>
+            {
+                if (listItem == toggleEngineItem)
+                {
+                    API.SetVehicleEngineOn(currentVehicle.Handle, listIndex == 1, true, false);
+                }
+                else if (listItem == toggleHeadlightsItem)
+                {
+                    currentVehicle.AreLightsOn = listIndex == 1;
+                }
+                else if (listItem == toggleNeonItem)
+                {
+                    API.SetVehicleNeonLightEnabled(currentVehicle.Handle, 0, listIndex == 1);
+                    API.SetVehicleNeonLightEnabled(currentVehicle.Handle, 1, listIndex == 1);
+                    API.SetVehicleNeonLightEnabled(currentVehicle.Handle, 2, listIndex == 1);
+                    API.SetVehicleNeonLightEnabled(currentVehicle.Handle, 3, listIndex == 1);
+                }
+                else if (listItem == toggleRadioItem)
+                {
+                    API.SetVehicleRadioLoud(currentVehicle.Handle, listIndex == 1);
+                    API.SetVehicleRadioLoud(currentVehicle.Handle, listIndex == 1);
+                }
+            };
         }
 
         private void CreateRequestVehicleMenu()
