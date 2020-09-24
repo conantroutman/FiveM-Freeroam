@@ -9,6 +9,7 @@ namespace Client.Menus.InteractionMenu
         private static QuickGPS QuickGPSItem;
         private static Inventory Inventory;
         private static Style Style;
+        private static Vehicles Vehicles;
 
         public void CreateMenu()
         {
@@ -43,6 +44,12 @@ namespace Client.Menus.InteractionMenu
             MenuItem StyleButton = new MenuItem("Style", "View and change player options.");
             Menu.AddMenuItem(StyleButton);
             MenuController.BindMenuItem(Menu, Style.GetMenu(), StyleButton);
+
+            Vehicles = new Vehicles();
+            MenuController.AddSubmenu(Menu, Vehicles.GetMenu());
+            MenuItem VehiclesButton = new MenuItem("Vehicles", "DK Donkey Kong.");
+            Menu.AddMenuItem(VehiclesButton);
+            MenuController.BindMenuItem(Menu, Vehicles.GetMenu(), VehiclesButton);
         }
     }
 }

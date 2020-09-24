@@ -1,7 +1,8 @@
 description 'Freeroam'
 
 files {
-	'MenuAPI.dll'
+	'MenuAPI.dll',
+	"Newtonsoft.Json.dll"
 }
 
 client_script 'Client.net.dll'

@@ -4,7 +4,7 @@ using CitizenFX.Core.Native;
 using CitizenFX.Core;
 using System.Collections.Generic;
 
-namespace Client.World
+namespace Client.WorldContent
 {
     class WeaponPickups
     {

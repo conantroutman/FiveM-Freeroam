@@ -17,13 +17,13 @@ namespace Client
             API.StatSetInt((uint)API.GetHashKey("MP0_STAMINA"), 100, true);
             API.RegisterCommand("passive", new Action(Gameplay.PassiveMode.Enable), false);
             Client.Players.Colors.Setup();
-            World.WeaponPickups.CreatePickups();
+            WorldContent.WeaponPickups.CreatePickups();
             HUD.Blips.Create();
             HUD.GamerTags.Create();
             Tick += OnTick;
         }
 
-        public async Task OnTick()
+        private async Task OnTick()
         {
             //Player.Loop();
             HUD.Blips.Update();

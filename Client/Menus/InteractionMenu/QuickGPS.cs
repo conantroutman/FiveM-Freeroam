@@ -40,7 +40,7 @@ namespace Client.Menus.InteractionMenu
                     API.DeleteWaypoint();
                     break;
                 case (int)locationTypes.ModShop:
-                    closestLocation = GetClosestLocation(World.ModShops.GetModShopLocations());
+                    closestLocation = GetClosestLocation(WorldContent.ModShops.GetModShopLocations());
                     API.SetNewWaypoint(closestLocation.X, closestLocation.Y);
                     break;
             }

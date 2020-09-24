@@ -42,6 +42,10 @@
     <Reference Include="MenuAPI">
       <HintPath>..\lib\MenuAPI.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\VehicleData.cs" />
     <Compile Include="Gameplay\PassiveMode.cs" />
     <Compile Include="HUD\Blips.cs" />
     <Compile Include="HUD\GamerTags.cs" />
@@ -61,12 +66,13 @@
     <Compile Include="Menus\InteractionMenu\Inventory.cs" />
     <Compile Include="Menus\InteractionMenu\QuickGPS.cs" />
     <Compile Include="Menus\InteractionMenu\Style.cs" />
+    <Compile Include="Menus\InteractionMenu\Vehicles.cs" />
     <Compile Include="Players\Colors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Chat.cs" />
     <Compile Include="UI\InteractionMenu.cs" />
-    <Compile Include="World\ModShops.cs" />
-    <Compile Include="World\WeaponPickups.cs" />
+    <Compile Include="WorldContent\ModShops.cs" />
+    <Compile Include="WorldContent\WeaponPickups.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fxmanifest.lua">
