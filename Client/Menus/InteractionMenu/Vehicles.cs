@@ -10,6 +10,7 @@ namespace Client.Menus.InteractionMenu
     {
         private Menu menu;
         private Menu requestVehicleMenu;
+        private static MenuItem requestVehicleButton;
 
         private List<string> doorsList = new List<string>()
         {
@@ -26,7 +27,7 @@ namespace Client.Menus.InteractionMenu
 
         private static Vehicle currentVehicle;
 
-        private static bool toggleBlip = true;
+        private static bool isNotInVehicle = true;
 
         public Menu GetMenu()
         {
@@ -98,11 +99,14 @@ namespace Client.Menus.InteractionMenu
             };
         }
 
+        //--------------------------------------------------------------------
+        // CreateRequestVehicleMenu - Creates a submenu for spawning vehicles
+        //--------------------------------------------------------------------
         private void CreateRequestVehicleMenu()
         {
             requestVehicleMenu = new Menu(Game.Player.Name, "Request Vehicle");
             MenuController.AddSubmenu(menu, requestVehicleMenu);
-            MenuItem requestVehicleButton = new MenuItem("Request Vehicle", "Get the mechanic to deliver a vehicle of your choice.");
+            requestVehicleButton = new MenuItem("Request Vehicle", "Get the mechanic to deliver a vehicle of your choice.");
             menu.AddMenuItem(requestVehicleButton);
             MenuController.BindMenuItem(menu, requestVehicleMenu, requestVehicleButton);
 
@@ -199,20 +203,22 @@ namespace Client.Menus.InteractionMenu
 
             // Enter vehicle
             if(Game.Player.Character.IsInVehicle() && Game.Player.Character.CurrentVehicle == currentVehicle) {
-                if (toggleBlip)
+                if (isNotInVehicle)
                 {
-                    toggleBlip = !toggleBlip;
+                    isNotInVehicle = !isNotInVehicle;
                     currentVehicle.AttachedBlip.Delete();
+                    requestVehicleButton.Enabled = false;
                 }
             }
             // Exit vehicle
             else if(!Game.Player.Character.IsInVehicle() && Game.Player.LastVehicle == currentVehicle)
             {
-                if (!toggleBlip)
+                if (!isNotInVehicle)
                 {
-                    toggleBlip = !toggleBlip;
+                    isNotInVehicle = !isNotInVehicle;
                     currentVehicle.AttachBlip().Sprite = BlipSprite.PersonalVehicleCar;
                     currentVehicle.AttachedBlip.Name = "Personal Vehicle";
+                    requestVehicleButton.Enabled = true;
                 }
             }
         }
