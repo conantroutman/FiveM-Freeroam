@@ -9,12 +9,16 @@ namespace Client.Menus.InteractionMenu
 {
     class QuickGPS
     {
-        private List<string> locationTypesList = new List<string>() { "None", "Mod Shop" };
+        private List<string> locationTypesList = new List<string>() { "None", "Mod Shop", "Airport", "Military Base", "Arena", "Golf Club" };
         private MenuListItem locationTypesListItem;
 
         private enum locationTypes {
             None = 0,
             ModShop,
+            Airport,
+            MilitaryBase,
+            Arena,
+            GolfClub
         };
 
         private void CreateItem()
@@ -42,6 +46,18 @@ namespace Client.Menus.InteractionMenu
                 case (int)locationTypes.ModShop:
                     closestLocation = GetClosestLocation(WorldContent.ModShops.GetModShopLocations());
                     API.SetNewWaypoint(closestLocation.X, closestLocation.Y);
+                    break;
+                case (int)locationTypes.Airport:
+                    API.SetNewWaypoint(1097.386f, -3016.153f);
+                    break;
+                case (int)locationTypes.MilitaryBase:
+                    API.SetNewWaypoint(-2263.075f, 3150.41f);
+                    break;
+                case (int)locationTypes.Arena:
+                    API.SetNewWaypoint(-185.174f, -2008.624f);
+                    break;
+                case (int)locationTypes.GolfClub:
+                    API.SetNewWaypoint(-1376.666f, 56.507f);
                     break;
             }
         }

@@ -1,5 +1,11 @@
 description 'Freeroam'
 
+dependencies {
+	'mpheist3',
+	'mpsum',
+	'mpvinewood'
+}
+
 files {
 	'MenuAPI.dll',
 	"Newtonsoft.Json.dll"

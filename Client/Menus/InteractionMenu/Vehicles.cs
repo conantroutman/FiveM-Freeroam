@@ -40,8 +40,10 @@ namespace Client.Menus.InteractionMenu
         {
             menu = new Menu(Game.Player.Name, "Vehicles");
 
+            // Request Vehicle
             CreateRequestVehicleMenu();
 
+            // Vehicle Doors
             doorsItem = new MenuListItem("Doors", doorsList, 0);
             menu.AddMenuItem(doorsItem);
 
@@ -53,6 +55,7 @@ namespace Client.Menus.InteractionMenu
                 }
             };
 
+            // Remote Functions
             remoteControlsMenu = new Menu(Game.Player.Name, "Vehicle Remote Functions");
             MenuController.AddSubmenu(menu, remoteControlsMenu);
             MenuItem remoteControlsMenuButton = new MenuItem("Vehicle Remote Functions", "Select to adjust vehicle engine, lights and radio options" );
@@ -88,7 +91,8 @@ namespace Client.Menus.InteractionMenu
                 }
                 else if (listItem == toggleRadioItem)
                 {
-                    API.SetVehicleRadioLoud(currentVehicle.Handle, listIndex == 1);
+                    API.SetVehicleRadioEnabled(currentVehicle.Handle, listIndex == 1);
+                    API.SetVehRadioStation(currentVehicle.Handle, "RADIO_04_PUNK");
                     API.SetVehicleRadioLoud(currentVehicle.Handle, listIndex == 1);
                 }
             };
