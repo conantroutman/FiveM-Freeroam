@@ -10,6 +10,8 @@ namespace Client
     public class MainClient : BaseScript
     {
         private static InteractionMenu InteractionMenu { get; set; }
+        private static bool isRadarExtended = false;
+        private static int radarTimer;
         public MainClient()
         {
             InteractionMenu = new InteractionMenu();
@@ -20,6 +22,7 @@ namespace Client
             WorldContent.WeaponPickups.CreatePickups();
             HUD.Blips.Create();
             HUD.GamerTags.Create();
+            API.SetRadarBigmapEnabled(false, false);
             Tick += OnTick;
         }
 
@@ -29,6 +32,32 @@ namespace Client
             HUD.Blips.Update();
             HUD.GamerTags.Update();
             Menus.InteractionMenu.Vehicles.Loop();
+            RadarController();
+        }
+
+        // Extend the radar by pressing Z
+        private async void RadarController()
+        {
+            if (API.IsControlJustReleased(0, 20)) {
+                await BaseScript.Delay(25);
+                ToggleRadarBigMode();
+            }
+
+            // Minimize the radar automatically after 10 seconds
+            if (isRadarExtended)
+            {
+                if (API.GetGameTimer() - radarTimer >= 10000)
+                {
+                    ToggleRadarBigMode();
+                }
+            } 
+        }
+
+        private void ToggleRadarBigMode()
+        {
+            isRadarExtended = !isRadarExtended;
+            API.SetRadarBigmapEnabled(isRadarExtended, false);
+            radarTimer = API.GetGameTimer();
         }
 
     }
