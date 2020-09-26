@@ -21,9 +21,10 @@ namespace Client.Menus.InteractionMenu
             "Hood",
             "Trunk"
         };
-        private MenuListItem doorsItem;
+        private static MenuListItem doorsItem;
 
         private Menu remoteControlsMenu;
+        private static MenuItem remoteControlsMenuButton;
 
         private static Vehicle currentVehicle;
 
@@ -59,7 +60,7 @@ namespace Client.Menus.InteractionMenu
             // Remote Functions
             remoteControlsMenu = new Menu(Game.Player.Name, "Vehicle Remote Functions");
             MenuController.AddSubmenu(menu, remoteControlsMenu);
-            MenuItem remoteControlsMenuButton = new MenuItem("Vehicle Remote Functions", "Select to adjust vehicle engine, lights and radio options" );
+            remoteControlsMenuButton = new MenuItem("Vehicle Remote Functions", "Select to adjust vehicle engine, lights and radio options" );
             menu.AddMenuItem(remoteControlsMenuButton);
             MenuController.BindMenuItem(menu, remoteControlsMenu, remoteControlsMenuButton);
 
@@ -208,6 +209,8 @@ namespace Client.Menus.InteractionMenu
                     isNotInVehicle = !isNotInVehicle;
                     currentVehicle.AttachedBlip.Delete();
                     requestVehicleButton.Enabled = false;
+                    doorsItem.Enabled = false;
+                    remoteControlsMenuButton.Enabled = false;
                 }
             }
             // Exit vehicle
@@ -219,6 +222,8 @@ namespace Client.Menus.InteractionMenu
                     currentVehicle.AttachBlip().Sprite = BlipSprite.PersonalVehicleCar;
                     currentVehicle.AttachedBlip.Name = "Personal Vehicle";
                     requestVehicleButton.Enabled = true;
+                    doorsItem.Enabled = true;
+                    remoteControlsMenuButton.Enabled = true;
                 }
             }
         }
