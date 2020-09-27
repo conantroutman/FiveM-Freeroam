@@ -45,6 +45,7 @@ namespace Client.Gameplay
             currentVehicle = await World.CreateVehicle(model, spawnLocation, spawnHeading);
             API.NetworkFadeInEntity(currentVehicle.Handle, true);
             currentVehicle.NeedsToBeHotwired = false;
+            currentVehicle.IsPersistent = true;
 
             currentVehicle.AttachBlip().Sprite = BlipSprite.PersonalVehicleCar;
             currentVehicle.AttachedBlip.Name = "Personal Vehicle";
