@@ -18,13 +18,12 @@ namespace Client.Players
         public static void Setup()
         {
             playerlist = new PlayerList();
-
-            API.ReplaceHudColour(116, GetColor());
+            API.ReplaceHudColour(116, GetColor(Game.Player));
         }
 
-        public static int GetColor()
+        public static int GetColor(Player player)
         {
-            return playerColors[playerlist.ToList().IndexOf(Game.Player) - 1];
+            return playerColors[playerlist.ToList().IndexOf(player)];
         }
 
         public static int GetOtherPlayersColor(int serverId)

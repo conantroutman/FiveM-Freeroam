@@ -22,10 +22,10 @@ namespace Client.HUD
                 if(player != Game.Player && player.Character.IsAlive)
                 {
                     gamerTag = API.CreateFakeMpGamerTag(player.Character.Handle, player.Name, false, false, "", 0);
-                    API.SetMpGamerTagColour(gamerTag, 0, Players.Colors.GetOtherPlayersColor(player.ServerId));
-                    API.SetMpGamerTagColour(gamerTag, 6, Players.Colors.GetOtherPlayersColor(player.ServerId));
-                    API.SetMpGamerTagColour(gamerTag, 7, Players.Colors.GetOtherPlayersColor(player.ServerId));
-                    API.SetMpGamerTagColour(gamerTag, 8, Players.Colors.GetOtherPlayersColor(player.ServerId));
+                    API.SetMpGamerTagColour(gamerTag, 0, Players.Colors.GetColor(player));
+                    API.SetMpGamerTagColour(gamerTag, 6, Players.Colors.GetColor(player));
+                    API.SetMpGamerTagColour(gamerTag, 7, Players.Colors.GetColor(player));
+                    API.SetMpGamerTagColour(gamerTag, 8, Players.Colors.GetColor(player));
                 }
             }
         }

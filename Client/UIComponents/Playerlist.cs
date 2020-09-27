@@ -61,7 +61,7 @@ namespace Client.UIComponents
             foreach(Player player in players)
             {
                 int index = players.IndexOf(player);
-                int color = Players.Colors.GetOtherPlayersColor(player.ServerId);
+                int color = Players.Colors.GetColor(player);
                 string headshot = playerHeadshots[index];
 
                 cardScaleform.CallFunction("SET_DATA_SLOT", index, "", $"{SanitizeName(player.Name)}", color, 0, "", "", "", 2, headshot, headshot);
