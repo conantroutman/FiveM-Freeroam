@@ -72,7 +72,7 @@ namespace Client.Gameplay
                 {
                     isNotInVehicle = !isNotInVehicle;
                     currentVehicle.AttachedBlip.Delete();
-                    TriggerEvent("exitedPersonalVehicle");
+                    TriggerEvent("enteredPersonalVehicle");
                 }
             }
             // Exit vehicle
@@ -83,7 +83,7 @@ namespace Client.Gameplay
                     isNotInVehicle = !isNotInVehicle;
                     currentVehicle.AttachBlip().Sprite = BlipSprite.PersonalVehicleCar;
                     currentVehicle.AttachedBlip.Name = "Personal Vehicle";
-                    TriggerEvent("enteredPersonalVehicle");
+                    TriggerEvent("exitedPersonalVehicle");
                 }
             }
         }

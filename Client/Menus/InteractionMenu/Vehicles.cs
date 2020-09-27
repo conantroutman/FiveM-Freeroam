@@ -176,20 +176,18 @@ namespace Client.Menus.InteractionMenu
         [EventHandler("enteredPersonalVehicle")]
         private void enteredPersonalVehicle()
         {
-            Debug.WriteLine("Fuck You");
             requestVehicleButton.Enabled = false;
             doorsItem.Enabled = false;
             remoteControlsMenuButton.Enabled = false;
         }
 
-        /*[EventHandler("exitedPersonalVehicle")]
+        [EventHandler("exitedPersonalVehicle")]
         private void exitedPersonalVehicle()
         {
-            Debug.WriteLine("Puta Madre");
             requestVehicleButton.Enabled = true;
             doorsItem.Enabled = true;
             remoteControlsMenuButton.Enabled = true;
-        }*/
+        }
     }
 
     class VehicleClassMenu
