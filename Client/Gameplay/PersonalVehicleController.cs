@@ -30,15 +30,21 @@ namespace Client.Gameplay
 
             Model model = new Model(API.GetHashKey(modelName));
 
-            int spawnDistance = 10;
+            int spawnDistance = 30;
             Vector3 playerPosition = Game.PlayerPed.Position;
             Vector3 playerForwardVector = Game.PlayerPed.ForwardVector;
-            playerPosition = playerPosition - (playerForwardVector * spawnDistance);
+            float cameraHeading = API.GetGameplayCamRelativeHeading();
+            Vector3 cameraForwardVector = new Vector3((float)Math.Cos(cameraHeading), (float)Math.Cos(cameraHeading), 0f);
+
+            playerPosition = playerPosition - (cameraForwardVector * spawnDistance);
 
             Vector3 spawnLocation = new Vector3();
             float spawnHeading = 0f;
             int unusedVar = 0;
             int nth = 1;
+            float screenX = 0f;
+            float screenY = 0f;
+
             API.GetNthClosestVehicleNodeWithHeading(playerPosition.X, playerPosition.Y, playerPosition.Z, nth, ref spawnLocation, ref spawnHeading, ref unusedVar, 9, 3.0f, 2.5f);
             API.GetRoadSidePointWithHeading(spawnLocation.X, spawnLocation.Y, spawnLocation.Z, spawnHeading, ref spawnLocation);
 
@@ -46,6 +52,8 @@ namespace Client.Gameplay
             API.NetworkFadeInEntity(currentVehicle.Handle, true);
             currentVehicle.NeedsToBeHotwired = false;
             currentVehicle.IsPersistent = true;
+
+
 
             currentVehicle.AttachBlip().Sprite = BlipSprite.PersonalVehicleCar;
             currentVehicle.AttachedBlip.Name = "Personal Vehicle";
