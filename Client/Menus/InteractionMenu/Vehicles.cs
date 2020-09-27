@@ -1,18 +1,20 @@
 ﻿using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using Client.Gameplay;
 using MenuAPI;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Client.Menus.InteractionMenu
 {
-    class Vehicles
+    class Vehicles : BaseScript
     {
-        private Menu menu;
-        private Menu requestVehicleMenu;
+        private static Menu menu;
+        private static Menu requestVehicleMenu;
         private static MenuItem requestVehicleButton;
 
-        private List<string> doorsList = new List<string>()
+        private static List<string> doorsList = new List<string>()
         {
             "None",
             "All",
@@ -23,13 +25,16 @@ namespace Client.Menus.InteractionMenu
         };
         private static MenuListItem doorsItem;
 
-        private Menu remoteControlsMenu;
+        private static Menu remoteControlsMenu;
         private static MenuItem remoteControlsMenuButton;
 
         private static Vehicle currentVehicle;
+        private static PersonalVehicleController vehicleController;
 
-        private static bool isNotInVehicle = true;
-
+        public Vehicles()
+        {
+            vehicleController = MainClient.PersonalVehicleController;
+        }
         public Menu GetMenu()
         {
             if (menu == null)
@@ -38,7 +43,7 @@ namespace Client.Menus.InteractionMenu
             }
             return menu;
         }
-        public void CreateMenu()
+        public static void CreateMenu()
         {
             menu = new Menu(Game.Player.Name, "Vehicles");
 
@@ -78,24 +83,24 @@ namespace Client.Menus.InteractionMenu
             {
                 if (listItem == toggleEngineItem)
                 {
-                    API.SetVehicleEngineOn(currentVehicle.Handle, listIndex == 1, true, false);
+                    API.SetVehicleEngineOn(vehicleController.currentVehicle.Handle, listIndex == 1, true, false);
                 }
                 else if (listItem == toggleHeadlightsItem)
                 {
-                    currentVehicle.AreLightsOn = listIndex == 1;
+                    vehicleController.currentVehicle.AreLightsOn = listIndex == 1;
                 }
                 else if (listItem == toggleNeonItem)
                 {
-                    API.SetVehicleNeonLightEnabled(currentVehicle.Handle, 0, listIndex == 1);
-                    API.SetVehicleNeonLightEnabled(currentVehicle.Handle, 1, listIndex == 1);
-                    API.SetVehicleNeonLightEnabled(currentVehicle.Handle, 2, listIndex == 1);
-                    API.SetVehicleNeonLightEnabled(currentVehicle.Handle, 3, listIndex == 1);
+                    API.SetVehicleNeonLightEnabled(vehicleController.currentVehicle.Handle, 0, listIndex == 1);
+                    API.SetVehicleNeonLightEnabled(vehicleController.currentVehicle.Handle, 1, listIndex == 1);
+                    API.SetVehicleNeonLightEnabled(vehicleController.currentVehicle.Handle, 2, listIndex == 1);
+                    API.SetVehicleNeonLightEnabled(vehicleController.currentVehicle.Handle, 3, listIndex == 1);
                 }
                 else if (listItem == toggleRadioItem)
                 {
-                    API.SetVehicleRadioEnabled(currentVehicle.Handle, listIndex == 1);
-                    API.SetVehRadioStation(currentVehicle.Handle, "RADIO_04_PUNK");
-                    API.SetVehicleRadioLoud(currentVehicle.Handle, listIndex == 1);
+                    API.SetVehicleRadioEnabled(vehicleController.currentVehicle.Handle, listIndex == 1);
+                    API.SetVehRadioStation(vehicleController.currentVehicle.Handle, "RADIO_04_PUNK");
+                    API.SetVehicleRadioLoud(vehicleController.currentVehicle.Handle, listIndex == 1);
                 }
             };
         }
@@ -103,7 +108,7 @@ namespace Client.Menus.InteractionMenu
         //--------------------------------------------------------------------
         // CreateRequestVehicleMenu - Creates a submenu for spawning vehicles
         //--------------------------------------------------------------------
-        private void CreateRequestVehicleMenu()
+        private static void CreateRequestVehicleMenu()
         {
             requestVehicleMenu = new Menu(Game.Player.Name, "Request Vehicle");
             MenuController.AddSubmenu(menu, requestVehicleMenu);
@@ -122,7 +127,7 @@ namespace Client.Menus.InteractionMenu
         //--------------------------------------------------------------------
         // CreateClassMenus - Creates a submenu for a given vehicle class
         //--------------------------------------------------------------------
-        private void CreateClassMenus(string title, List<string> vehiclesList)
+        private static void CreateClassMenus(string title, List<string> vehiclesList)
         {
             VehicleClassMenu classMenu = new VehicleClassMenu(title, vehiclesList);
 
@@ -132,101 +137,59 @@ namespace Client.Menus.InteractionMenu
             MenuController.BindMenuItem(requestVehicleMenu, classMenu.GetMenu(), classMenuButton);
         }
 
-        private void DoorControls(int index)
+        private static void DoorControls(int index)
         {
             switch (index)
             {
                 case 0:
-                    foreach (VehicleDoor door in currentVehicle.Doors.GetAll())
+                    foreach (VehicleDoor door in vehicleController.currentVehicle.Doors.GetAll())
                     {
                         door.Close();
                     }
                     break;
                 case 1:
-                    foreach (VehicleDoor door in currentVehicle.Doors.GetAll())
+                    foreach (VehicleDoor door in vehicleController.currentVehicle.Doors.GetAll())
                     {
                         door.Open();
                     }
                     break;
                 case 2:
-                    currentVehicle.Doors.GetAll()[0].Open();
+                    vehicleController.currentVehicle.Doors.GetAll()[0].Open();
                     break;
                 case 3:
-                    currentVehicle.Doors.GetAll()[1].Open();
+                    vehicleController.currentVehicle.Doors.GetAll()[1].Open();
                     break;
                 case 4:
-                    currentVehicle.Doors.GetAll()[2].Open();
+                    vehicleController.currentVehicle.Doors.GetAll()[2].Open();
                     break;
                 case 5:
-                    currentVehicle.Doors.GetAll()[3].Open();
+                    vehicleController.currentVehicle.Doors.GetAll()[3].Open();
                     break;
             }
         }
 
-        public async static void SummonVehicle(string modelName)
+        public static void RequestVehicle(string modelName)
         {
-            if (currentVehicle != null)
-            {
-                await DeleteVehicle();
-            }
-
-            Model model = new Model(API.GetHashKey(modelName));
-
-            Vector3 playerPosition = Game.PlayerPed.Position;
-            Vector3 spawnLocation = new Vector3();
-            float spawnHeading = 0f;
-            int unusedVar = 0;
-            API.GetNthClosestVehicleNodeWithHeading(playerPosition.X, playerPosition.Y, playerPosition.Z, 10, ref spawnLocation, ref spawnHeading, ref unusedVar, 9, 3.0f, 2.5f);
-            API.GetRoadSidePointWithHeading(spawnLocation.X, spawnLocation.Y, spawnLocation.Z, spawnHeading, ref spawnLocation);
-
-            currentVehicle = await World.CreateVehicle(model, spawnLocation, spawnHeading);
-            API.NetworkFadeInEntity(currentVehicle.Handle, true);
-            currentVehicle.NeedsToBeHotwired = false;
-
-            currentVehicle.AttachBlip().Sprite = BlipSprite.PersonalVehicleCar;
-            currentVehicle.AttachedBlip.Name = "Personal Vehicle";
-            currentVehicle.AttachedBlip.IsFlashing = true;
-            await BaseScript.Delay(5000);
-            currentVehicle.AttachedBlip.IsFlashing = false;
+            vehicleController.SummonVehicle(modelName);
         }
 
-        private async static Task DeleteVehicle()
+        [EventHandler("enteredPersonalVehicle")]
+        private void enteredPersonalVehicle()
         {
-            currentVehicle.AttachedBlip.Delete();
-            API.NetworkFadeOutEntity(currentVehicle.Handle, true, false);
-            await BaseScript.Delay(1000);
-            currentVehicle.Delete();
+            Debug.WriteLine("Fuck You");
+            requestVehicleButton.Enabled = false;
+            doorsItem.Enabled = false;
+            remoteControlsMenuButton.Enabled = false;
         }
 
-        public async static void Loop()
+        /*[EventHandler("exitedPersonalVehicle")]
+        private void exitedPersonalVehicle()
         {
-            // The following if statement handles hiding and unhiding of the vehicle blip as the player enters and exits the vehicle.
-
-            // Enter vehicle
-            if(Game.Player.Character.IsInVehicle() && Game.Player.Character.CurrentVehicle == currentVehicle) {
-                if (isNotInVehicle)
-                {
-                    isNotInVehicle = !isNotInVehicle;
-                    currentVehicle.AttachedBlip.Delete();
-                    requestVehicleButton.Enabled = false;
-                    doorsItem.Enabled = false;
-                    remoteControlsMenuButton.Enabled = false;
-                }
-            }
-            // Exit vehicle
-            else if(!Game.Player.Character.IsInVehicle() && Game.Player.LastVehicle == currentVehicle)
-            {
-                if (!isNotInVehicle)
-                {
-                    isNotInVehicle = !isNotInVehicle;
-                    currentVehicle.AttachBlip().Sprite = BlipSprite.PersonalVehicleCar;
-                    currentVehicle.AttachedBlip.Name = "Personal Vehicle";
-                    requestVehicleButton.Enabled = true;
-                    doorsItem.Enabled = true;
-                    remoteControlsMenuButton.Enabled = true;
-                }
-            }
-        }
+            Debug.WriteLine("Puta Madre");
+            requestVehicleButton.Enabled = true;
+            doorsItem.Enabled = true;
+            remoteControlsMenuButton.Enabled = true;
+        }*/
     }
 
     class VehicleClassMenu
@@ -253,7 +216,7 @@ namespace Client.Menus.InteractionMenu
 
             menu.OnItemSelect += (sender, item, index) =>
             {
-                Vehicles.SummonVehicle(vehicleItemList[index].ItemData);
+                Vehicles.RequestVehicle(vehicleItemList[index].ItemData);
             };
         }
 

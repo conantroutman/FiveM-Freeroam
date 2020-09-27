@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using MenuAPI;
 using Client.Menus.InteractionMenu;
 using Client.UIComponents;
+using Client.HUD;
+using Client.Gameplay;
 
 namespace Client
 {
@@ -12,10 +14,14 @@ namespace Client
     {
         private static InteractionMenu InteractionMenu { get; set; }
         private Playerlist playerList;
+        private WastedScreen wastedScreen;
+        public static PersonalVehicleController PersonalVehicleController { get; private set; }
         private static bool isRadarExtended = false;
         private static int radarTimer;
         public MainClient()
         {
+            PersonalVehicleController = new PersonalVehicleController();
+
             InteractionMenu = new InteractionMenu();
             InteractionMenu.CreateMenu();
 
@@ -33,16 +39,17 @@ namespace Client
 
             playerList = new Playerlist();
 
+            wastedScreen = new WastedScreen();
+
             Tick += OnTick;
         }
 
         private async Task OnTick()
         {
-            //Player.Loop();
             HUD.Blips.Update();
             HUD.GamerTags.Update();
-            Menus.InteractionMenu.Vehicles.Loop();
             RadarController();
+            PersonalVehicleController.OnTick();
             playerList.Loop();
         }
 
@@ -70,6 +77,5 @@ namespace Client
             API.SetRadarBigmapEnabled(isRadarExtended, false);
             radarTimer = API.GetGameTimer();
         }
-
     }
 }
