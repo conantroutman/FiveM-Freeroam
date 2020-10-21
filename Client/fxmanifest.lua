@@ -12,6 +12,7 @@ files {
 }
 
 client_script 'Client.net.dll'
+server_script 'Server.net.dll'
 
 fx_version 'adamant'
 games { 'rdr3', 'gta5' }

@@ -7,6 +7,7 @@ using Client.Menus.InteractionMenu;
 using Client.UIComponents;
 using Client.HUD;
 using Client.Gameplay;
+using CitizenFX.Core.UI;
 
 namespace Client
 {
@@ -15,6 +16,7 @@ namespace Client
         private static InteractionMenu InteractionMenu { get; set; }
         private Playerlist playerList;
         private WastedScreen wastedScreen;
+        private BlipController BlipController;
         public static PersonalVehicleController PersonalVehicleController { get; private set; }
         private static bool isRadarExtended = false;
         private static int radarTimer;
@@ -30,9 +32,9 @@ namespace Client
 
             Client.Players.Colors.Setup();
 
-            WorldContent.WeaponPickups.CreatePickups();
+            BlipController = new BlipController();
 
-            HUD.Blips.Create();
+            WorldContent.WeaponPickups.CreatePickups();
             HUD.GamerTags.Create();
 
             API.SetRadarBigmapEnabled(false, false);
@@ -46,7 +48,7 @@ namespace Client
 
         private async Task OnTick()
         {
-            HUD.Blips.Update();
+            //BlipController.Update();
             HUD.GamerTags.Update();
             RadarController();
             PersonalVehicleController.OnTick();

@@ -12,13 +12,18 @@ namespace Client.Menus.InteractionMenu
     {
         private Menu Menu;
         private Accessories Accessories;
-        private void CreateMenu()
+
+        public Inventory()
         {
             Menu = new Menu(Game.Player.Name, "Inventory");
             Accessories = new Accessories();
 
             MenuController.AddSubmenu(Menu, Accessories.GetMenu());
             MenuItem AccesoriesItem = new MenuItem("Accessories");
+        }
+        private void CreateMenu()
+        {
+            
         }
 
         public Menu GetMenu()
