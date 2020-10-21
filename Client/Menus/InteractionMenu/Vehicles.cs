@@ -200,6 +200,9 @@ namespace Client.Menus.InteractionMenu
         {
             menu = new Menu(Game.Player.Name, title);
 
+            // Alphabetically sort the list of vehicles
+            vehiclesList.Sort((x, y) => string.Compare(API.GetLabelText(x), API.GetLabelText(y)));
+
             foreach (string vehicleModel in vehiclesList)
             {
                 vehicleItem = new MenuItem(API.GetLabelText(vehicleModel));
@@ -212,6 +215,7 @@ namespace Client.Menus.InteractionMenu
                 }
             }
 
+            // Spawn the selected vehicle
             menu.OnItemSelect += (sender, item, index) =>
             {
                 Vehicles.RequestVehicle(vehicleItemList[index].ItemData);
