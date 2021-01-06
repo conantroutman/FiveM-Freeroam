@@ -40,7 +40,7 @@ namespace Client.HUD
             blip = player.Character.AttachBlip();
             API.SetBlipCategory(blip.Handle, 7);
             blip.Name = player.Name;
-            API.SetBlipColour(blip.Handle, Colors.GetColor(player) - 22);
+            API.SetBlipColour(blip.Handle, (5 + player.ServerId));
             blip.IsShortRange = true;
         }
 
@@ -86,7 +86,7 @@ namespace Client.HUD
             if (API.GetBlipSprite(blip) != sprite)
             {
                 API.SetBlipSprite(blip, sprite);
-                API.SetBlipColour(blip, Colors.GetColor(Game.Player) - 22);
+                API.SetBlipColour(blip, 5 + player.ServerId);
                 API.ShowHeadingIndicatorOnBlip(blip, showHeading);
                 API.SetBlipNameToPlayerName(blip, player.Handle);
             }
@@ -106,20 +106,5 @@ namespace Client.HUD
                 }
             }
         }*/
-
-        [EventHandler("newPlayerConnected")]
-        private void newPlayerConnected(Player connectedPlayer)
-        {
-            playerList = new PlayerList();
-            CreatePlayerBlips();
-            Screen.ShowNotification($"{connectedPlayer.Name} connected.");
-        }
-
-        [EventHandler("playerDisconnected")]
-        private void playerDisconnected(Player disconnectedPlayer)
-        {
-            playerList = new PlayerList();
-            Screen.ShowNotification($"{disconnectedPlayer.Name} disconnected.");
-        }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using CitizenFX.Core;
+using CitizenFX.Core.Native;
 using MenuAPI;
 using System.Media;
 
 namespace Client.Menus.InteractionMenu
 {
-    class InteractionMenu
+    class InteractionMenu : BaseScript
     {
         private static Menu Menu { get; set; }
         private static QuickGPS QuickGPSItem;
@@ -13,8 +14,19 @@ namespace Client.Menus.InteractionMenu
         private static Vehicles Vehicles;
         private static MenuItem killYourselfItem;
 
-        public void CreateMenu()
+        public InteractionMenu()
         {
+            CreateMenu();
+        }
+
+        private async void CreateMenu()
+        {
+            while (!API.DoesEntityExist(Game.Player.Character.Handle))
+            {
+                await Delay(0);
+            }
+
+
             Menu = new Menu(Game.Player.Name, "Interaction Menu");
             MenuController.AddMenu(Menu);
             MenuController.MainMenu = Menu;

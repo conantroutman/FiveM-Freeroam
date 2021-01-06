@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>D:\Servers\FXServer\server-data\resources\Freeroam\</OutputPath>
+    <OutputPath>D:\Servers\FXServer\server-data\resources\[local]\Freemode\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -56,13 +56,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\TimeTrial.cs" />
+    <Compile Include="Activities\TimeTrials.cs" />
     <Compile Include="Data\VehicleData.cs" />
     <Compile Include="Gameplay\PassiveMode.cs" />
     <Compile Include="Gameplay\PersonalVehicleController.cs" />
     <Compile Include="HUD\BlipController.cs" />
     <Compile Include="HUD\GamerTags.cs" />
+    <Compile Include="HUD\Obituaries.cs" />
     <Compile Include="HUD\WastedScreen.cs" />
     <Compile Include="MainClient.cs" />
+    <Compile Include="Managers\HUDManager.cs" />
     <Compile Include="Managers\SpawnManager.cs" />
     <Compile Include="Menus\InteractionMenu\Accessories.cs" />
     <Compile Include="Menus\InteractionMenu\InteractionMenu.cs" />

@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>D:\Servers\FXServer\server-data\resources\Freeroam\</OutputPath>
+    <OutputPath>D:\Servers\FXServer\server-data\resources\[local]\Freemode\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

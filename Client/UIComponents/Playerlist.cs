@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 // C# port of https://rage.mp/files/file/333-player-list/
 namespace Client.UIComponents
 {
+    // Stays open for 10 seconds
     class Playerlist
     {
         private Scaleform cardScaleform;
@@ -91,6 +92,38 @@ namespace Client.UIComponents
             }
         }
 
+        public async void OpenPlayerList()
+        {
+            playerList = new PlayerList();
+            await GetPlayerHeadshots(playerList);
+            playerListMaxPage = (int)Math.Ceiling((double)playerList.Count() / PLAYERS_PER_PAGE);
+
+            cardScaleform = new Scaleform("mp_mm_card_freemode");
+            while (!cardScaleform.IsLoaded) { await BaseScript.Delay(0); }
+
+            UpdateTitle();
+            UpdateCard();
+
+            Audio.PlaySoundFrontend("OPEN_SOUND_NAME");
+        }
+        public void ClosePlayerList()
+        {
+            if (cardScaleform != null)
+            {
+                cardScaleform.Dispose();
+                cardScaleform = null;
+            }
+
+            Audio.PlaySoundFrontend("CLOSE_SOUND_NAME");
+        }
+
+        public void RenderPlayerList()
+        {
+            API.SetScriptGfxAlign(76, 84);
+            API.DrawScaleformMovie(cardScaleform.Handle, 0.122f, 0.3f, 0.28f, 0.6f, 255, 255, 255, 255, 0);
+            API.ResetScriptGfxAlign();
+        }
+
         public async void Loop()
         {
             if (Game.IsControlJustPressed(0, Control.MultiplayerInfo))
@@ -100,40 +133,30 @@ namespace Client.UIComponents
 
                 if (playerListOpen)
                 {
-                    Debug.WriteLine("Close Player List");
-                    if (cardScaleform != null)
-                    {
-                        cardScaleform.Dispose();
-                        cardScaleform = null;
-                    }
-
-                    Audio.PlaySoundFrontend(CLOSE_SOUND_NAME);
+                    ClosePlayerList();
                 }
                 else
                 {
-                    Debug.WriteLine("Open Player List");
                     playerList = new PlayerList();
                     await GetPlayerHeadshots(playerList);
                     playerListMaxPage = (int)Math.Ceiling((double)playerList.Count() / PLAYERS_PER_PAGE);
 
                     cardScaleform = new Scaleform("mp_mm_card_freemode");
                     while (!cardScaleform.IsLoaded) { await BaseScript.Delay(0); }
-                    Debug.WriteLine($"IsScaleformLoaded: {cardScaleform}");
 
                     UpdateTitle();
                     UpdateCard();
 
-                    Audio.PlaySoundFrontend(OPEN_SOUND_NAME);
+                    Audio.PlaySoundFrontend("OPEN_SOUND_NAME");
                 }
 
                 playerListOpen = !playerListOpen;
             }
 
-            if (playerListOpen)
+            if (playerListOpen && Game.IsControlJustPressed(0, Control.InteractionMenu))
             {
-                API.SetScriptGfxAlign(76, 84);
-                API.DrawScaleformMovie(cardScaleform.Handle, 0.122f, 0.3f, 0.28f, 0.6f, 255, 255, 255, 255, 0);
-                API.ResetScriptGfxAlign();
+                ClosePlayerList();
+                playerListOpen = !playerListOpen;
             }
         }
     }

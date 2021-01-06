@@ -5,37 +5,21 @@ namespace Server
 {
     public class MainServer : BaseScript
     {
-        private PlayerList playerList;
         public MainServer()
         {
             Debug.WriteLine("Started the server.");
-            playerList = new PlayerList();
-            foreach(Player player in playerList)
-            {
-                Debug.WriteLine($"{player.Name} ID: {player.Handle}");
-            }
+
+            EventHandlers["baseevents:onPlayerDied"] += new Action<Player>(OnPlayerDied);
         }
 
-        [EventHandler("playerConnecting")]
-        private void playerConnecting([FromSource] Player connectedPlayer)
+        private void OnPlayerDied([FromSource] Player victim)
         {
-            Debug.WriteLine($"Player {connectedPlayer.Name} connected");
+            Debug.WriteLine($"{victim.Name} died.");
 
-            playerList = new PlayerList();
-            foreach(Player player in playerList)
-            {
-                player.TriggerEvent("newPlayerConnected", connectedPlayer);
-            }
-        }
-
-        [EventHandler("playerDropped")]
-        private void playerDropped([FromSource] Player droppedPlayer, string reason)
-        {
-            Debug.WriteLine($"Player {droppedPlayer.Name} disconnected");
-            playerList = new PlayerList();
+            PlayerList playerList = new PlayerList();
             foreach (Player player in playerList)
             {
-                player.TriggerEvent("playerDisconnected", droppedPlayer);
+                player.TriggerEvent("playerDied", victim.Handle);
             }
         }
     }
