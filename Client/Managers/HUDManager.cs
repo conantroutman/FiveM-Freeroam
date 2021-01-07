@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using CitizenFX.Core.UI;
 using Client.HUD;
 using Client.Menus.InteractionMenu;
 using Client.UIComponents;
@@ -25,7 +26,8 @@ namespace Client.Managers
         private static int radarTimer;
         public HUDManager()
         {
-            
+            EventHandlers["playerJoined"] += new Action<string>((string message) => { Screen.ShowNotification(message); });
+            EventHandlers["playerLeft"] += new Action<string>((string message) => { Screen.ShowNotification(message); });
         }
 
         public async void Update()

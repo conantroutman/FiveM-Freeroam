@@ -33,6 +33,7 @@ namespace Client.HUD
         {
             //Constructor
             EventHandlers["playerDied"] += new Action<int>(OnPlayerDied);
+            EventHandlers["playerKilled"] += new Action<int>(OnPlayerKilled);
         }
 
         // Possible death messages
@@ -43,31 +44,28 @@ namespace Client.HUD
 
         private void OnPlayerDied(int victimId)
         {
-            Debug.WriteLine(victimId.ToString());
-            string victimName = API.GetPlayerFromServerId(victimId) == Game.Player.Handle ? "You" : $"<C>{API.GetPlayerName(API.GetPlayerFromServerId(victimId))}</C>";
+            string victimName = API.GetPlayerFromServerId(victimId) == Game.Player.Handle ? "You" : $"~HUD_COLOUR_NET_PLAYER{victimId}~<C>{API.GetPlayerName(API.GetPlayerFromServerId(victimId))}</C>~w~";
             Screen.ShowNotification($"{victimName} died.");
         }
 
-        private void OnPlayerKilled([FromSource] Player victim, int killerId)
+        private void OnPlayerKilled(int victimId)
         {
-            Debug.WriteLine("Someone died");
-            Player killer = Players[killerId];
-            ShowObituary(victim, killer);
-        }
-
-        private void Test()
-        {
-            Screen.ShowNotification($"Someone got fucked up.");
-        }
-
-        private void ShowObituary(Player victim, Player killer = null)
-        {
-
-            String message = GetDeathMessage();
-            String killerString = killer.Handle == Game.Player.Handle ? "You" : $"<C>{killer.Name}</C>";
-            String victimString = victim.Handle == Game.Player.Handle ? "you" : $"<C>{victim.Name}</C>";
-            Screen.ShowNotification($"{killerString} {message} {victimString}.");
-            Debug.WriteLine($"{killerString} {message} {victimString}.");
+            Player victim = Players[victimId];
+            // Gets player server ID based on which entity killed the victim
+            Debug.WriteLine($"{API.GetPedSourceOfDeath(victim.Character.Handle)}");
+            int killerId = GetKillerId(victim);
+            if (killerId != 0)
+            {
+                Player killer = Players[killerId];
+                Debug.WriteLine($"{killer.Name} killed {victim.Name}.");
+                String killerString = killer.Handle == Game.Player.Handle ? "You" : $"~HUD_COLOUR_NET_PLAYER{killerId}~<C>{killer.Name}</C>~w~";
+                String victimString = victim.Handle == Game.Player.Handle ? "you" : $"~HUD_COLOUR_NET_PLAYER{victimId}~<C>{victim.Name}</C>~w~";
+                Screen.ShowNotification($"{killerString} killed {victimString}.");
+            } else
+            {
+                OnPlayerDied(victimId);
+            }
+            
         }
 
         private String GetDeathMessage()
@@ -75,14 +73,18 @@ namespace Client.HUD
             return "killed";
         }
 
-        [EventHandler("onResourceStop")]
-        private void OnResourceStop(string name)
+        private int GetKillerId(Player victim)
         {
-            if (name == API.GetCurrentResourceName())
+            int killer = API.GetPedSourceOfDeath(victim.Character.Handle);
+            if (killer != 0)
             {
-                // Do stuff when the resource stops
+                int killerId = API.GetPlayerServerId(API.NetworkGetPlayerIndexFromPed(killer));
+                return killerId;
+            } else
+            {
+                Debug.WriteLine(API.GetPedCauseOfDeath(victim.Character.Handle).ToString());
+                return 0;
             }
         }
-
     }
 }
