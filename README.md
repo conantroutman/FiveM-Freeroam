@@ -1,2 +1,2 @@
 # FiveM-Freeroam
-A custom freeroam gamemode for my FiveM server, built in C#.
+GTA IV-style multiplayer free mode for FiveM. Still heavy WIP.
