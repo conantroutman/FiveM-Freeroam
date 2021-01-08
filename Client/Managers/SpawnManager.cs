@@ -33,6 +33,8 @@ namespace Client.Managers
             API.GiveWeaponToPed(Game.Player.Character.Handle, (uint)WeaponHash.Pistol, 12 * 7, false, false);
 
             API.ReplaceHudColour(116, 27 + Game.Player.ServerId);
+
+            SetPlayerSkin();
         }
 
         private static void SetPlayerSkin()
@@ -80,14 +82,15 @@ namespace Client.Managers
             {
                 Exports["spawnmanager"].spawnPlayer(new
                 {
-                    x = -1135.707275,
-                    y = -1987.154175,
-                    z = 12.976217,
-                    heading = 260.0,
+                    x = -1037.91,
+                    y = -2737.98,
+                    z = 20.17,
+                    heading = 323.5,
                     model = "mp_m_freemode_01",
                     skipFade = false
                 });
                 isFirstSpawn = !isFirstSpawn;
+                TriggerEvent("firstSpawn");
             }
             // Respawn near death location
             else if (!isFirstSpawn && Game.Player.IsDead)
@@ -112,7 +115,8 @@ namespace Client.Managers
                 Game.PlayerPed.ClearBloodDamage();
                 Game.PlayerPed.ResetVisibleDamage();
             }
-            SetPlayerSkin();
+
+            TriggerServerEvent("playerRespawned");
         }
     }
 }

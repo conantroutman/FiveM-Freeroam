@@ -15,7 +15,7 @@ namespace Client.Managers
     class HUDManager : BaseScript
     {
         private InteractionMenu InteractionMenu = new InteractionMenu();  // Interaction menu needs to be initialized fter player has spawned
-        private BlipController BlipController = new BlipController();
+        private BlipController blipController = new BlipController();
         private Playerlist Playerlist = new Playerlist();
         private Obituaries Obituaries = new Obituaries();
         private GamerTags GamerTags = new GamerTags();
@@ -27,7 +27,7 @@ namespace Client.Managers
         public HUDManager()
         {
             EventHandlers["playerJoined"] += new Action<string>((string message) => { Screen.ShowNotification(message); });
-            EventHandlers["playerLeft"] += new Action<string>((string message) => { Screen.ShowNotification(message); });
+            EventHandlers["playerLeft"] += new Action<int, string>((int serverId, string message) => { Screen.ShowNotification(message); });
         }
 
         public async void Update()
@@ -35,6 +35,7 @@ namespace Client.Managers
             //Playerlist.Loop();
             RadarController();
             Chat.Update();
+            blipController.Update();
         }
 
         // Extend the radar by pressing Z
@@ -42,7 +43,7 @@ namespace Client.Managers
         {
             if (API.IsControlJustReleased(0, 20))
             {
-                if (!isPlayerListOpen && !isRadarExtended)
+                /*if (!isPlayerListOpen && !isRadarExtended)
                 {
                     Debug.WriteLine("Opening player list");
                     isPlayerListOpen = !isPlayerListOpen;
@@ -61,7 +62,7 @@ namespace Client.Managers
                     Debug.WriteLine("Closing radar");
                     await BaseScript.Delay(25);
                     ToggleRadarBigMode();
-                }
+                }*/
             }
 
             if (isPlayerListOpen)

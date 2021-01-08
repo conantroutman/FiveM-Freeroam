@@ -16,6 +16,11 @@ namespace Server
             EventHandlers["baseevents:onPlayerDied"] += new Action<Player>(OnPlayerDied);
             EventHandlers["baseevents:onPlayerKilled"] += new Action<Player, int, dynamic>(OnPlayerKilled);
 
+            EventHandlers["playerRespawned"] += new Action<Player>(OnPlayerRespawn);
+
+            EventHandlers["baseevents:enteredVehicle"] += new Action<Player, int, int, string>(OnEnteredVehicle);
+            EventHandlers["baseevents:leftVehicle"] += new Action<Player>(OnLeftVehicle);
+
         }
 
         private async void OnPlayerConnecting([FromSource] Player player, string playerName, dynamic setKickReason, dynamic deferrals)
@@ -27,7 +32,7 @@ namespace Server
 
             var licenseIdentifier = player.Identifiers["license"];
 
-            Debug.WriteLine($"A player with the name {playerName} (Identifier: [{licenseIdentifier}]) is connecting to the server.");
+            Debug.WriteLine($"A player with the name {playerName} (Identifier: [{licenseIdentifier}], ID: {player.Handle}) is connecting to the server.");
 
             deferrals.update($"Hello {playerName}, your license [{licenseIdentifier}] is being checked");
 
@@ -48,24 +53,36 @@ namespace Server
         {
             Debug.WriteLine($"Player {player.Name} dropped (Reason: {reason}).");
 
-            TriggerClientEvent("playerLeft", $"~HUD_COLOUR_NET_PLAYER{player.Handle}~<C>{player.Name}</C>~w~ left.");
+            TriggerClientEvent("playerLeft", player.Handle, $"~HUD_COLOUR_NET_PLAYER{player.Handle}~<C>{player.Name}</C>~w~ left.");
         }
 
         private void OnPlayerDied([FromSource] Player victim)
         {
             Debug.WriteLine($"{victim.Name} died.");
-
-            PlayerList playerList = new PlayerList();
-            foreach (Player player in playerList)
-            {
-                player.TriggerEvent("playerDied", victim.Handle);
-            }
+            TriggerClientEvent("playerDied", victim.Handle);
         }
 
         private void OnPlayerKilled([FromSource] Player victim, int killerId, dynamic deathData)
         {
             Debug.WriteLine();
             TriggerClientEvent("playerKilled", victim.Handle);
+        }
+
+        private void OnPlayerRespawn([FromSource] Player player)
+        {
+            Debug.WriteLine($"{player.Name} respawned.");
+            TriggerClientEvent("playerRespawned", player.Handle);
+        }
+
+        private void OnEnteredVehicle([FromSource] Player player, int vehicle, int seat, string name)
+        {
+            Debug.WriteLine($"{player.Name} entered a {name}.");
+            TriggerClientEvent("playerEnteredVehicle", player.Handle, name);
+        }
+
+        private void OnLeftVehicle([FromSource] Player player)
+        {
+            TriggerClientEvent("playerLeftVehicle", player.Handle);
         }
     }
 }

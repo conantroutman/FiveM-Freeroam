@@ -28,7 +28,6 @@ namespace Client
 
         private async Task OnTick()
         {
-            //BlipController.Update();
             HUD.GamerTags.Update();
             TimeTrials.Update();
             PersonalVehicleController.OnTick();
