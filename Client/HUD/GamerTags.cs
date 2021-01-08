@@ -11,7 +11,7 @@ namespace Client.HUD
         private static bool isPassiveModeActive;
         private static bool isHealthBarVisible = false;
 
-        private static float distance = 400f;
+        private static float distance = 800f;
 
         public GamerTags()
         {
@@ -27,12 +27,15 @@ namespace Client.HUD
                 {
                     gamerTag = API.CreateFakeMpGamerTag(player.Character.Handle, player.Name, false, false, "", 0);
                     API.SetMpGamerTagColour(gamerTag, 0, 27 + player.ServerId);
+
+                    API.SetMpGamerTagAlpha(gamerTag, 2, 255);
                     API.SetMpGamerTagColour(gamerTag, 2, 27 + player.ServerId);
+
                     API.SetMpGamerTagColour(gamerTag, 6, 27 + player.ServerId);
                     API.SetMpGamerTagColour(gamerTag, 7, 27 + player.ServerId);
                     API.SetMpGamerTagColour(gamerTag, 8, 27 + player.ServerId);
-                    API.SetMpGamerHealthBarDisplay(gamerTag, true);
-                    //API.SetMpGamerTagHealthBarColor(gamerTag, 27 + player.ServerId);
+                    //API.SetMpGamerHealthBarDisplay(gamerTag, true);
+                    API.SetMpGamerTagHealthBarColor(gamerTag, 27 + player.ServerId);
                 }
             }
         }
@@ -54,7 +57,7 @@ namespace Client.HUD
                     }
 
 
-                    if (IsOtherPlayerWithinDistance(player) && IsOtherPlayerVisible(player))
+                    if ((IsOtherPlayerWithinDistance(player) || IsPlayerAimingAtOtherPlayer(player)) && IsOtherPlayerVisible(player))
                     {
                         API.SetMpGamerTagVisibility(gamerTag, 0, true);
 
@@ -89,15 +92,14 @@ namespace Client.HUD
                             API.SetMpGamerTagVisibility(gamerTag, 6, false);
                         }
 
-                        if (API.IsPlayerFreeAiming(Game.Player.Handle))
+                        // Is player aiming at 
+                        if (IsPlayerAimingAtOtherPlayer(player))
                         {
-                            if (API.IsPlayerFreeAimingAtEntity(Game.Player.Handle, player.Character.Handle))
-                            {
-
-                            }
-                            else
-                            {
-                            }
+                            // Make healthbar visible
+                            API.SetMpGamerTagVisibility(gamerTag, 2, true);
+                        } else
+                        {
+                            API.SetMpGamerTagVisibility(gamerTag, 2, false);
                         }
                     } else
                     {
@@ -144,6 +146,18 @@ namespace Client.HUD
             int raycast = API.StartShapeTestRay(Game.Player.Character.Position.X, Game.Player.Character.Position.Y, Game.Player.Character.Position.Z, player.Character.Position.X, player.Character.Position.Y, player.Character.Position.Z, 1, 0, 0);
             API.GetShapeTestResult(raycast, ref isIntersecting, ref endCoords, ref surfaceNormal, ref entity);
             return !isIntersecting;
+        }
+
+        private static bool IsPlayerAimingAtOtherPlayer(Player player)
+        {
+
+            if (API.IsPlayerFreeAimingAtEntity(Game.Player.Handle, player.Character.Handle) || API.IsPlayerTargettingEntity(Game.Player.Handle, player.Character.Handle))
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
         }
     }
 }
