@@ -15,6 +15,7 @@ namespace Client
         private HUDManager HUDManager = new HUDManager();
         private SpawnManager SpawnManager = new SpawnManager();
         private TimeTrials TimeTrials = new TimeTrials();
+        private BaseJumping baseJumping = new BaseJumping();
         public static PersonalVehicleController PersonalVehicleController = new PersonalVehicleController();
         
         
@@ -30,6 +31,7 @@ namespace Client
         {
             HUD.GamerTags.Update();
             TimeTrials.Update();
+            baseJumping.Update();
             PersonalVehicleController.OnTick();
             HUDManager.Update();
             WorldContent.WeaponPickups.Update();

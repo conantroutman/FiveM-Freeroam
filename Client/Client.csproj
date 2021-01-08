@@ -56,6 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\BaseJump.cs" />
+    <Compile Include="Activities\BaseJumping.cs" />
     <Compile Include="Activities\TimeTrial.cs" />
     <Compile Include="Activities\TimeTrials.cs" />
     <Compile Include="Data\VehicleData.cs" />

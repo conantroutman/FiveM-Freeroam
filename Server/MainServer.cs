@@ -21,6 +21,14 @@ namespace Server
             EventHandlers["baseevents:enteredVehicle"] += new Action<Player, int, int, string>(OnEnteredVehicle);
             EventHandlers["baseevents:leftVehicle"] += new Action<Player>(OnLeftVehicle);
 
+            EventHandlers["basejumping:playerLanded"] += new Action<Player, int, int>(OnBaseJumpPlayerLanded);
+
+        }
+
+        private void OnBaseJumpPlayerLanded([FromSource] Player player, int distance, int glideTime)
+        {
+            Debug.WriteLine($"{player.Name} completed a base jump.");
+            TriggerClientEvent("basejumping:onLanding", player.Handle, distance, glideTime);
         }
 
         private async void OnPlayerConnecting([FromSource] Player player, string playerName, dynamic setKickReason, dynamic deferrals)
