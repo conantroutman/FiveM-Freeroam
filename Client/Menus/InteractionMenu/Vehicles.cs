@@ -122,6 +122,8 @@ namespace Client.Menus.InteractionMenu
             CreateClassMenus("Sports Classics", Data.VehicleData.SportsClassics);
             CreateClassMenus("Muscle", Data.VehicleData.Muscle);
             CreateClassMenus("Compacts", Data.VehicleData.Compacts);
+            CreateClassMenus("Coupes", Data.VehicleData.Coupes);
+            CreateClassMenus("SUVs", Data.VehicleData.SUVs);
         }
 
         //--------------------------------------------------------------------

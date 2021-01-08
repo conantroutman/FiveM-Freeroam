@@ -13,6 +13,8 @@ namespace Client.Data
             "ASBO",
             "BLISTA",
             "BRIOSO",
+            "BRIOSO2",
+            "CLUB",
             "DILETTANTE",
             "DILETTANTE2",
             "ISSI2",
@@ -23,7 +25,8 @@ namespace Client.Data
             "KANJO",
             "PANTO",
             "PRAIRIE",
-            "RHAPSODY"
+            "RHAPSODY",
+            "WEEVIL"
         };
 
         public static List<string> Muscle { get; } = new List<string>()
@@ -95,7 +98,8 @@ namespace Client.Data
             "VOODOO",
             "VOODOO2",
             "YOSEMITE",
-            "YOSEMITE2"
+            "YOSEMITE2",
+            "YOSEMITE3"
         };
 
         public static List<string> Sports { get; } = new List<string>()
@@ -282,6 +286,85 @@ namespace Client.Data
             "FORMULA2",
             "OPENWHEEL1",
             "OPENWHEEL2"
+        };
+
+        public static List<string> Coupes { get; } = new List<string>()
+        {
+            "COGCABRIO",
+            "EXEMPLAR",
+            "F620",
+            "FELON",
+            "FELON2",
+            "JACKAL",
+            "ORACLE",
+            "ORACLE2",
+            "SENTINEL",
+            "SENTINEL2",
+            "WINDSOR",
+            "WINDSOR2",
+            "ZION",
+            "ZION2"
+        };
+
+        public static List<string> Emergency { get; } = new List<string>()
+        {
+            "AMBULANCE",
+            "FBI",
+            "FBI2",
+            "FIRETRUK",
+            "LGUARD",
+            "PBUS",
+            "POLICE",
+            "POLICE2",
+            "POLICE3",
+            "POLICE4",
+            "POLICEB",
+            "POLICEOLD1",
+            "POLICEOLD2",
+            "POLICET",
+            "PRANGER",
+            "RIOT",
+            "RIOT2",
+            "SHERIFF",
+            "SHERIFF2"
+        };
+
+        public static List<string> SUVs { get; } = new List<string>()
+        {
+            "BALLER",
+            "BALLER2",
+            "BALLER3",
+            "BALLER4",
+            "BALLER5",
+            "BALLER6",
+            "BJXL",
+            "CAVALCADE",
+            "CAVALCADE2",
+            "CONTENDER",
+            "DUBSTA",
+            "DUBSTA2",
+            "FQ2",
+            "GRANGER",
+            "GRESLEY",
+            "HABANERO",
+            "HUNTLEY",
+            "LANDSTALKER",
+            "LANDSTALKER2",
+            "MESA",
+            "MESA2",
+            "NOVAK",
+            "PATRIOT",
+            "PATRIOT2",
+            "RADI",
+            "REBLA",
+            "ROCOTO",
+            "SEMINOLE",
+            "SEMINOLE2",
+            "SERRANO",
+            "TOROS",
+            "XLS",
+            "XLS2",
+            "SQUADDIE"
         };
     }
 }
