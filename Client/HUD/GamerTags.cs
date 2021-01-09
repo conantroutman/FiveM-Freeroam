@@ -104,6 +104,7 @@ namespace Client.HUD
                     } else
                     {
                         API.SetMpGamerTagVisibility(gamerTag, 0, false);
+                        API.SetMpGamerTagVisibility(gamerTag, 2, false);
                         API.SetMpGamerTagVisibility(gamerTag, 6, false);
                         API.SetMpGamerTagVisibility(gamerTag, 7, false);
                         API.SetMpGamerTagVisibility(gamerTag, 8, false);
