@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
-using CitizenFX.Core.Native;
+using static CitizenFX.Core.Native.API;
 using CitizenFX.Core.UI;
 
 namespace Client.HUD
@@ -33,34 +33,28 @@ namespace Client.HUD
         {
             //Constructor
             EventHandlers["playerDied"] += new Action<int>(OnPlayerDied);
-            EventHandlers["playerKilled"] += new Action<int>(OnPlayerKilled);
-        }
-
-        // Possible death messages
-        public readonly struct DeathMessages
-        {
-            
+            EventHandlers["playerKilled"] += new Action<int, int, string>(OnPlayerKilled);
         }
 
         private void OnPlayerDied(int victimId)
         {
-            string victimName = API.GetPlayerFromServerId(victimId) == Game.Player.Handle ? "You" : $"~HUD_COLOUR_NET_PLAYER{victimId}~<C>{API.GetPlayerName(API.GetPlayerFromServerId(victimId))}</C>~w~";
+            string victimName = GetPlayerFromServerId(victimId) == Game.Player.Handle ? "You" : $"~HUD_COLOUR_NET_PLAYER{victimId}~<C>{GetPlayerName(GetPlayerFromServerId(victimId))}</C>~w~";
             Screen.ShowNotification($"{victimName} died.");
         }
 
-        private void OnPlayerKilled(int victimId)
+        private void OnPlayerKilled(int victimId, int weaponHash, string killTerm)
         {
             Player victim = Players[victimId];
             // Gets player server ID based on which entity killed the victim
-            Debug.WriteLine($"{API.GetPedSourceOfDeath(victim.Character.Handle)}");
             int killerId = GetKillerId(victim);
             if (killerId != 0)
             {
                 Player killer = Players[killerId];
-                Debug.WriteLine($"{killer.Name} killed {victim.Name}.");
                 String killerString = killer.Handle == Game.Player.Handle ? "You" : $"~HUD_COLOUR_NET_PLAYER{killerId}~<C>{killer.Name}</C>~w~";
                 String victimString = victim.Handle == Game.Player.Handle ? "you" : $"~HUD_COLOUR_NET_PLAYER{victimId}~<C>{victim.Name}</C>~w~";
-                Screen.ShowNotification($"{killerString} killed {victimString}.");
+                String killString = weaponHash == GetHashKey("weapon_pistol") ? "pistoled" : "killed";
+                String obituary = DoesKillTermNeedFormatting(killTerm) && victim.Handle == Game.Player.Handle ? $"{killerString} {FormatKillTerm(killTerm)}." : $"{killerString} {killTerm} {victimString}.";
+                Screen.ShowNotification(obituary);
             } else
             {
                 OnPlayerDied(victimId);
@@ -75,16 +69,41 @@ namespace Client.HUD
 
         private int GetKillerId(Player victim)
         {
-            int killer = API.GetPedSourceOfDeath(victim.Character.Handle);
+            int killer = GetPedSourceOfDeath(victim.Character.Handle);
             if (killer != 0)
             {
-                int killerId = API.GetPlayerServerId(API.NetworkGetPlayerIndexFromPed(killer));
+                int killerId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(killer));
                 return killerId;
             } else
             {
-                Debug.WriteLine(API.GetPedCauseOfDeath(victim.Character.Handle).ToString());
                 return 0;
             }
+        }
+
+        private bool DoesKillTermNeedFormatting(string term)
+        {
+            bool needFormatting = false;
+            switch (term)
+            {
+                case "beat down":
+                case "cut up":
+                case "crossed out":
+                case "cut down":
+                case "blew away":
+                case "opened up":
+                    needFormatting = true;
+                    break;
+                default:
+                    needFormatting = false;
+                    break;
+            }
+            return needFormatting;
+        }
+
+        private string FormatKillTerm(string term)
+        {
+            string[] words = term.Split(' ');
+            return $"{words[0]} you {words[1]}";
         }
     }
 }
