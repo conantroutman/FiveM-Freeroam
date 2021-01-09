@@ -63,6 +63,7 @@
     <Compile Include="Data\VehicleData.cs" />
     <Compile Include="Gameplay\PassiveMode.cs" />
     <Compile Include="Gameplay\PersonalVehicleController.cs" />
+    <Compile Include="Gameplay\PlayerActions.cs" />
     <Compile Include="HUD\BlipController.cs" />
     <Compile Include="HUD\GamerTags.cs" />
     <Compile Include="HUD\Obituaries.cs" />

@@ -7,6 +7,7 @@ using Client.HUD;
 using Client.Gameplay;
 using Client.Managers;
 using Client.Activities;
+using System;
 
 namespace Client
 {
@@ -16,7 +17,10 @@ namespace Client
         private SpawnManager SpawnManager = new SpawnManager();
         private TimeTrials TimeTrials = new TimeTrials();
         private BaseJumping baseJumping = new BaseJumping();
+        private PlayerActions playerActions = new PlayerActions();
         public static PersonalVehicleController PersonalVehicleController = new PersonalVehicleController();
+
+        
         
         
         public MainClient()
@@ -25,6 +29,19 @@ namespace Client
             API.NetworkSetFriendlyFireOption(true);
             API.SetCanAttackFriendly(Game.Player.Character.Handle, true, true);
             Tick += OnTick;
+
+            EventHandlers["playerEnteredVehicle"] += new Action<int>(OnPlayerEnteredVehicle);
+        }
+
+        private void OnPlayerEnteredVehicle(int serverId)
+        {
+            if (Game.Player.Handle == Players[serverId].Handle)
+            {
+                if (Game.Player.Character.CurrentVehicle.ClassType == VehicleClass.Helicopters || Game.Player.Character.CurrentVehicle.ClassType == VehicleClass.Planes)
+                {
+                    API.GiveWeaponToPed(Game.Player.Character.Handle, (uint)API.GetHashKey("gadget_parachute"), 1, false, false);
+                }
+            }
         }
 
         private async Task OnTick()
@@ -35,8 +52,7 @@ namespace Client
             PersonalVehicleController.OnTick();
             HUDManager.Update();
             WorldContent.WeaponPickups.Update();
+            playerActions.Update();
         }
-
-        
     }
 }
