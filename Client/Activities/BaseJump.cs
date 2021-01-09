@@ -17,7 +17,7 @@ namespace Client.Activities
             this.markerLocation = markerLocation - new Vector3(0f, 0f, 1f);
             this.teleportLocation = teleportLocation;
             this.heading = heading;
-            API.GetGroundZFor_3dCoord(teleportLocation.X, teleportLocation.Y, teleportLocation.Z, ref this.teleportLocation.Z, false);
+            //API.GetGroundZFor_3dCoord(teleportLocation.X, teleportLocation.Y, teleportLocation.Z, ref this.teleportLocation.Z, false);
 
             this.blip = API.AddBlipForCoord(this.markerLocation.X, this.markerLocation.Y, this.markerLocation.Z);
             API.SetBlipSprite(this.blip, this.blipSprite);

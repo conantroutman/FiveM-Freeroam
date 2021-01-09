@@ -99,7 +99,7 @@ namespace Client.Activities
 
         private void CancelBaseJump()
         {
-            hasLanded = true;
+            hasLanded = false;
             isBaseJumping = false;
             hasOpenedParachute = false;
         }
