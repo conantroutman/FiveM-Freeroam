@@ -268,6 +268,17 @@ namespace Client.HUD
             return isRotating;
         }
 
+        private bool IsPlayerInSameVehicle(Player player)
+        {
+            if (player.Character.CurrentVehicle == Game.Player.Character.CurrentVehicle)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
         public async void Update()
         {
             foreach(Player player in Players)
@@ -278,6 +289,14 @@ namespace Client.HUD
                     {
                         // Rotate to player's heading
                         API.SetBlipRotation(API.GetBlipFromEntity(player.Character.Handle), (int)Math.Ceiling(API.GetEntityHeading(player.Character.Handle)));
+                    }
+
+                    if (Game.Player.Character.IsInVehicle() && IsPlayerInSameVehicle(player))
+                    {
+                        API.SetBlipDisplay(API.GetBlipFromEntity(player.Character.Handle), 3);
+                    } else
+                    {
+                        API.SetBlipDisplay(API.GetBlipFromEntity(player.Character.Handle), 2);
                     }
                 }
             }
