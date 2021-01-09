@@ -8,7 +8,6 @@ namespace Client.HUD
 {
     class BlipController : BaseScript
     {
-        private static Blip blip;
         private static PlayerList playerList;
         private bool doesBlipExist = false;
 
@@ -44,12 +43,11 @@ namespace Client.HUD
         private void CreatePlayerBlip(int serverId)
         {
             Player player = Players[serverId];
-            Debug.WriteLine($"Does entity exist? {API.DoesEntityExist(player.Character.Handle)}");
             if (player.Handle != Game.Player.Handle)
             {
                 if(API.DoesEntityExist(player.Character.Handle) && !API.DoesBlipExist(API.GetBlipFromEntity(player.Character.Handle)))
                 {
-                    blip = player.Character.AttachBlip();
+                    Blip blip = player.Character.AttachBlip();
                     API.SetBlipCategory(blip.Handle, 7);
                     blip.Name = player.Name;
                     API.SetBlipColour(blip.Handle, (5 + player.ServerId));
@@ -93,7 +91,6 @@ namespace Client.HUD
                 switch (API.GetVehicleClassFromName((uint)API.GetHashKey(vehicleName)))
                 {
                     case 14:
-                        Debug.WriteLine("It's a boat");
                         SetBlip(player, API.GetBlipFromEntity(player.Character.Handle), 427, false, false);
                         break;
                     case 15:
@@ -230,41 +227,60 @@ namespace Client.HUD
             player.Character.AttachedBlip.Delete();
         }
 
+        private bool IsBlipRotating(int blip)
+        {
+            bool isRotating = false;
+            switch (API.GetBlipSprite(blip))
+            {
+                case 421:
+                case 423:
+                case 424:
+                case 426:
+                case 427:
+                case 533:
+                case 534:
+                case 558:
+                case 562:
+                case 572:
+                case 573:
+                case 575:
+                case 577:
+                case 578:
+                case 579:
+                case 580:
+                case 581:
+                case 582:
+                case 583:
+                case 584:
+                case 585:
+                case 598:
+                case 600:
+                case 601:
+                case 613:
+                case 646:
+                    isRotating = true;
+                    break;
+                default:
+                    isRotating = false;
+                    break;
+            }
+
+            return isRotating;
+        }
+
         public async void Update()
         {
-            /*foreach(Player player in players)
+            foreach(Player player in Players)
             {
-                blip = API.GetBlipFromEntity(player.Handle);
-                if(player.Character.IsDead)
+                if (API.DoesBlipExist(API.GetBlipFromEntity(player.Character.Handle)))
                 {
-                    SetBlip(player, blip, (int)BlipSprite.Dead, false, false);
-                } else
-                {
-                    if (player.Character.IsInVehicle())
+                    if (IsBlipRotating(API.GetBlipFromEntity(player.Character.Handle)))
                     {
-                        switch(player.Character.CurrentVehicle.ClassType)
-                        {
-                            case VehicleClass.Helicopters:
-                                SetBlip(player, blip, (int)BlipSprite.HelicopterAnimated, false, false);
-                                break;
-                            case VehicleClass.Planes:
-                                SetBlip(player, blip, (int)BlipSprite.Plane, false, true);
-                                break;
-                            case VehicleClass.Boats:
-                                SetBlip(player, blip, 427, false, true);
-                                break;
-                        }
-                    } else
-                    {
-                        SetBlip(player, blip, 1, true, false);
+                        // Rotate to player's heading
+                        API.SetBlipRotation(API.GetBlipFromEntity(player.Character.Handle), (int)Math.Ceiling(API.GetEntityHeading(player.Character.Handle)));
                     }
                 }
-
-                if (isBlipRotating)
-                {
-                    API.SetBlipRotation(blip, (int)Math.Ceiling(API.GetEntityHeading(player.Character.Handle)));
-                }
-            }*/
+            }
         }
     }
 }
